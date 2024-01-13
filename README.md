@@ -6,7 +6,6 @@ Système de suggestions de véhicules électriques
 La pile technologique actuelle de l'application web. 
 
 - NodeJS
-- ExpressJS
 - MYSQL
 - Angular (CLI)
 - Docker et Docker Compose
