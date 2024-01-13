@@ -1,4 +1,4 @@
-# SSVE-H23
+# Elego - SSVE
 
 Système de suggestions de véhicules électriques
 
