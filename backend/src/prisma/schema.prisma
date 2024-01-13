@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Filtre {
+  sessionId        String   @id @default("") @db.VarChar(200)
+  price_min        Int?     @default(0)
+  price_max        Int?     @default(100000)
+  created_at       DateTime @default(now()) @db.Timestamp(0)
+  updated_at       DateTime @default(now()) @db.Timestamp(0)
+  valid_categories String   @default("[]") @db.VarChar(200)
+  valid_seat_count String   @default("[]") @db.VarChar(200)
+  valid_types      String   @default("[]") @db.VarChar(200)
+}
+
+model Itinerary {
+  id         Int               @id @default(autoincrement()) @db.UnsignedInt
+  day        Itinerary_day?    @default(NA)
+  period     Itinerary_period? @default(NA)
+  frequency  Int?
+  created_at DateTime          @default(now()) @db.Timestamp(0)
+  updated_at DateTime          @default(now()) @db.Timestamp(0)
+}
+
+model Route {
+  departureLat  Float     @db.Float
+  departureLong Float     @db.Float
+  arrivalLong   Float     @db.Float
+  arrivalLat    Float     @db.Float
+  etaDeparture  DateTime? @db.Time(0)
+  etaArrival    DateTime? @db.Time(0)
+  length        Int?
+  cost          Int?
+  chargingTime  Int?
+  dwellingTime  Int?
+  created_at    DateTime  @default(now()) @db.Timestamp(0)
+  updated_at    DateTime  @default(now()) @db.Timestamp(0)
+
+  @@id([departureLat, departureLong, arrivalLong, arrivalLat])
+}
+
+model Session {
+  email      String   @unique(map: "User_email_key")
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  data       String?  @db.MediumText
+  expires    Int
+  session_id String   @id @default("") @db.VarChar(200)
+}
+
+model Vehicle {
+  vehicleId        Int              @id @default(autoincrement())
+  brand            String           @default("NA")
+  year             Int              @db.Year
+  model            String           @default("NA")
+  category         Vehicle_category @default(NA)
+  type             Vehicle_type     @default(NA)
+  autonomy         Int              @default(0)
+  chargingTime     Int?             @default(0)
+  seatsCount       Int              @default(0)
+  price            Int              @default(0)
+  imageUrl         String           @default("") @db.VarChar(200)
+  batteryCapacity  Int
+  maxChargingPower Int?
+  created_at       DateTime         @default(now()) @db.Timestamp(0)
+  updated_at       DateTime         @default(now()) @db.Timestamp(0)
+}
+
+model VehicleCandidates {
+  vehicleId    Int
+  sessionId    String   @default("") @db.VarChar(200)
+  autonomyRank Int
+  priceRank    Int
+  created_at   DateTime @default(now()) @db.Timestamp(0)
+  updated_at   DateTime @default(now()) @db.Timestamp(0)
+
+  @@id([vehicleId, sessionId])
+  @@index([sessionId], map: "sessionId")
+}
+
+model Waypoint {
+  lat        Float    @db.Float
+  adress     String   @default("")
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  longi      Float    @db.Float
+
+  @@id([longi, lat])
+}
+
+model navigation {
+  ItineraryId Int      @db.UnsignedInt
+  sessionId   String   @default("") @db.VarChar(200)
+  created_at  DateTime @default(now()) @db.Timestamp(0)
+  updated_at  DateTime @default(now()) @db.Timestamp(0)
+
+  @@id([ItineraryId, sessionId])
+}
+
+enum Itinerary_period {
+  Daily
+  Monthly
+  Yearly
+  Weekly
+  NA
+}
+
+enum Vehicle_category {
+  SUV
+  Compact
+  Sport
+  NA
+}
+
+enum Vehicle_type {
+  Hybrid
+  Electric
+  Gas
+  NA
+}
+
+enum Itinerary_day {
+  M
+  Tu
+  W
+  Th
+  F
+  S
+  Su
+  NA
+}

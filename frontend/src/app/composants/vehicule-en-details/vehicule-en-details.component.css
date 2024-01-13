@@ -1,0 +1,418 @@
+.component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+}
+h3,
+span,
+li {
+  font-family: 'Blinker';
+}
+
+.carteIdVehiculeDetails {
+  width: 90vw;
+  height: fit-content;
+  display: flex;
+  padding: 20px;
+}
+
+.carteDetailsGauche,
+.carteDetailsDroite {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.carteDetailsDroite {
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-left: 80px;
+}
+
+.imgVehicule {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.imgVehicule > img {
+  object-fit: contain;
+  width: 90%;
+}
+
+.scoreDetails {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.scorePrix {
+  width: calc(100% / 3);
+}
+
+.scoreRecharge {
+  width: calc(100% / 3);
+}
+
+.scoreAutonomie {
+  width: calc(100% / 3);
+}
+
+.donuts {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.titreVehicule {
+  width: 100%;
+  height: fit-content;
+}
+
+.titreVehicule > h3 {
+  font-size: calc(3500vw / 930);
+  font-weight: 700;
+}
+
+.listeDetails {
+  width: 80%;
+  height: fit-content;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.listeDetails > ul > li {
+  display: flex;
+  margin: calc(4000vh / 1035) 0px;
+  padding-left: 20px;
+  font-size: calc(1500vw / 930);
+  align-items: center;
+}
+
+.listeDetails > ul > li > span {
+  margin-right: 20px;
+}
+
+li > span > svg {
+  transform: scale(1.5);
+}
+
+.subvention {
+  display: flex;
+  padding-left: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.subvention > span {
+  margin-right: 20px;
+  font-size: calc(2000vw / 930);
+}
+
+.iconGraph > span > svg {
+  transform: scale(1.5);
+}
+
+.iconGraph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconGraph > span {
+  margin-right: 30px;
+}
+
+.titreGraph {
+  font-size: calc(1500vw / 930);
+}
+
+.valeurScore {
+  font-size: calc(3000vw / 930);
+  position: absolute;
+  top: 18%;
+  left: 18%;
+  text-align: right;
+}
+.eme {
+  font-size: calc(1000vw / 930);
+  position: absolute;
+  top: 25%;
+  left: 48%;
+}
+.nbVehicule {
+  font-size: calc(2500vw / 930);
+  position: absolute;
+  bottom: 18%;
+  right: 18%;
+}
+
+/* ICI C'est les graph */
+
+@property --p {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.pie {
+  --p: 20;
+  --b: calc(780vw / 930);
+  --c: darkred;
+  --w: 10vw;
+
+  width: var(--w);
+  aspect-ratio: 1;
+  position: relative;
+  display: inline-grid;
+  margin: 5px;
+  place-content: center;
+  font-size: calc(1700vw / 930);
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.pie:before,
+.pie:after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+.pie:before {
+  inset: 0;
+  background: radial-gradient(farthest-side, var(--c) 98%, #0000) top/var(--b)
+      var(--b) no-repeat,
+    conic-gradient(var(--c) calc(var(--p) * 1%), #0000 0);
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    #0000 calc(99% - var(--b)),
+    #000 calc(100% - var(--b))
+  );
+  mask: radial-gradient(
+    farthest-side,
+    #0000 calc(99% - var(--b)),
+    #000 calc(100% - var(--b))
+  );
+}
+
+.pie:after {
+  inset: calc(50% - var(--b) / 2);
+  background: var(--c);
+  transform: rotate(calc(var(--p) * 3.6deg))
+    translateY(calc(50% - var(--w) / 2));
+}
+
+.animate {
+  animation: p 1s 0.5s both;
+}
+
+.no-round:before {
+  background-size: 0 0, auto;
+}
+
+.no-round:after {
+  content: none;
+}
+
+@keyframes p {
+  from {
+    --p: 0;
+  }
+}
+
+.valeurGraph {
+  position: absolute;
+  z-index: 2;
+  margin-top: auto;
+  margin-left: 0px;
+}
+
+@media (max-width: 1500px) {
+  .listeDetails {
+    width: 100%;
+  }
+}
+
+@media (max-width: 950px) {
+  .carteIdVehiculeDetails {
+    flex-wrap: wrap;
+    padding: 0px;
+  }
+
+  .carteDetailsGauche,
+  .carteDetailsDroite {
+    width: 100%;
+    margin-bottom: 50px;
+  }
+
+  .carteDetailsDroite {
+    padding-left: 0px;
+  }
+
+  .donuts {
+    transform: scale(1.7);
+  }
+
+  .titreGraph {
+    font-size: calc(3500vw / 930);
+  }
+
+  .iconGraph > span > svg {
+    transform: scale(0.7);
+  }
+
+  .iconGraph > span {
+    margin-right: 10px;
+  }
+
+  .listeDetails > ul > li {
+    padding-left: 10px;
+    font-size: calc(3000vw / 930);
+  }
+
+  .subvention > span {
+    font-size: calc(3000vw / 930);
+  }
+
+  .subvention {
+    padding: 0px;
+  }
+
+  .titreVehicule > h3 {
+    font-size: calc(6500vw / 930);
+    text-decoration: underline;
+  }
+
+  .imgVehicule {
+    padding-bottom: 30px;
+  }
+}
+
+
+/* ONGLET */
+
+
+.onglet{
+    height: 100vh;
+    width: fit-content;
+    margin-top: 100px;
+}
+
+ul#tabs-tab3{
+transform: scale(0.8);
+}
+
+ul#tabs-tab3>li{
+    width: calc(100vw/3);
+}
+
+ul#tabs-tab3>li>a{
+    text-align: center;
+    font-size: calc(3000vw/1883);
+}
+
+a[data-te-nav-active]{
+    color: #3cca5c;
+}
+
+ul li:has(a[data-te-nav-active]) {
+    border-bottom: 5px solid #3cca5c;
+}
+
+
+
+.graph{
+  width: 50vw;
+  height: calc(50vw*0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas{
+  width: auto !important;
+}
+
+canvas[ng-reflect-type="line"]{
+  width: 80% !important;
+}
+
+canvas[ng-reflect-type="bar"]{
+  transform: scale(1.5);
+}
+
+
+canvas[ng-reflect-type="radar"]{
+  transform: scale(1.2);
+}
+
+
+
+.onglet_div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.explication{
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: flex-start;
+  padding-right: 10%;
+}
+
+.explication>h2{
+  font-size: calc(4500vw/1883);
+  margin-bottom: 20px;
+}
+
+div[role="tabpanel"]{
+  display: none;
+}
+
+div[role="tabpanel"].opacity-100 {
+  display: flex;
+}
+
+.bigUpper{
+  font-size: calc(7000vw/1883);
+}
+
+.divBTN{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.btn{
+  background-color: #3cca5c;
+  border-radius: 13px;
+  padding: 10px;
+}
+
+.btn>span{
+  color: white;
+}
+
+@media (max-width: 1000px) {
+
+  div[role="tabpanel"] {
+    flex-wrap: wrap;
+  }
+  
+  div[role="tabpanel"]>div {
+    width: 100%;
+  }
+
+  .explication{
+    padding: 50px;
+  }
+}

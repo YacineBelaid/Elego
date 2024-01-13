@@ -1,0 +1,14 @@
+<div class="mt-7">
+  <mat-slider
+    [min]="minPrice"
+    [max]="maxPrice"
+    step="1000"
+    showTickMarks
+    discrete
+    [displayWith]="formatLabel.bind(this)">
+    <input
+      matSliderThumb
+      [ngModel]="price"
+      (ngModelChange)="onModelChange($event)" />
+  </mat-slider>
+</div>

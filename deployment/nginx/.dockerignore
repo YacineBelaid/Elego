@@ -1,0 +1,5 @@
+# Sert juste à optimiser le déploiement en réduisant la taille du contexte de build (et réduit les invalidations inutile de layer).
+
+Dockerfile
+.dockerignore
+

@@ -1,0 +1,105 @@
+openapi: 3.0.3
+
+tags:
+- name: users
+  description: users API
+
+paths:
+# [GET] Get request example
+  /users:
+    get:
+      tags:
+      - example
+      summary: Description of the GET request
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# [POST] users
+    post:
+      tags:
+      - example
+      summary: Description of the POST request
+      parameters:
+      - name: body
+        in: body
+        description: example Data
+        required: true
+        schema:
+          $ref: '#/definitions/users'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [PUT] users/id
+    put:
+      tags:
+      - users
+      summary: Update Example
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+        type: integer
+      - name: body
+        in: body
+        description: user Data
+        required: true
+        schema:
+          $ref: '#/definitions/users'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [DELETE] users/id
+    delete:
+      tags:
+      - example
+      summary: Delete Example
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# definitions
+definitions:
+  users:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+      email:
+        type: string
+        description: user Email
+      password:
+        type: string
+        description: user Password
+
+schemes:
+ - https
+ - http

@@ -1,0 +1,73 @@
+<span class="content titreMod">{{ title }}</span>
+
+<div class="body">
+  <nav class="navPaysage">
+    <div class="logo">
+      <a routerLink="/composant/accueil/accueil" routerLinkActive="active"
+        ><img src="https://zupimages.net/up/23/09/0722.png"
+      /></a>
+    </div>
+    <div class="menu">
+      <ul>
+        <li>
+          <a class="hover-underline-animation" href="besoins">SIMULATION</a>
+        </li>
+        <li><a class="hover-underline-animation" href="#">À PROPOS</a></li>
+        <li>
+          <a routerLink="catalogue" class="hover-underline-animation" href="#"
+            >CATALOGUE</a
+          >
+        </li>
+        <li>
+          <a class="hover-underline-animation" href="#">NOS PARTENAIRES</a>
+        </li>
+      </ul>
+    </div>
+    <div class="langue">
+      <select name="langue" id="langue">
+        <option value="francais">FR</option>
+        <option value="anglais">EN</option>
+      </select>
+    </div>
+  </nav>
+
+  <nav class="navPortrait">
+    <div class="logo">
+      <a routerLink="/composant/accueil/accueil" routerLinkActive="active"
+        ><img src="https://zupimages.net/up/23/09/0722.png"
+      /></a>
+    </div>
+    <div class="bugerMenu" (click)="onBurgerMenuClick()">
+      <div>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Hamburger_icon_white.svg/800px-Hamburger_icon_white.svg.png" />
+      </div>
+    </div>
+  </nav>
+  <div class="menu_responsive invisible">
+    <img
+      (click)="onImageClick()"
+      src="https://zupimages.net/up/23/06/pj71.png" />
+    <ul>
+      <li>
+        <a
+          class="hover-underline-animation"
+          routerLink="/composant/accueil/accueil"
+          routerLinkActive="active"
+          >ACCUEIL</a
+        >
+      </li>
+      <li><a class="hover-underline-animation" href="#">SIMULATION</a></li>
+      <li><a class="hover-underline-animation" href="#">À PROPOS</a></li>
+      <li>
+        <a routerLink="catalogue" class="hover-underline-animation" href="#"
+          >CATALOGUE</a
+        >
+      </li>
+      <li><a class="hover-underline-animation" href="#">NOS PARTENAIRES</a></li>
+    </ul>
+  </div>
+  <div [@routeAnimations]="prepareRoute(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
+</div>

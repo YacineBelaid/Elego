@@ -1,0 +1,169 @@
+<div>Nombre de véhicules considérés: {{ nbMatchingVehicules }}</div>
+<ul
+  class="w-100 relative m-0 list-none overflow-hidden p-0 transition-[height] duration-200 ease-in-out"
+  data-te-stepper-init
+  data-te-stepper-type="vertical"
+  id="questionnaire-stepper">
+  <li
+    data-te-stepper-step-ref
+    class="relative h-fit after:absolute after:left-[2.45rem] after:top-[3.6rem] after:mt-px after:h-[calc(100%-2.45rem)] after:w-px after:bg-[#e0e0e0] after:content-[''] dark:after:bg-neutral-600">
+    <div
+      data-te-stepper-head-ref
+      class="flex pointer-events-none items-center p-6 leading-[1.3rem] no-underline after:bg-[#e0e0e0] after:content-[''] hover:bg-[#f9f9f9] focus:outline-none dark:after:bg-neutral-600 dark:hover:bg-[#3b3b3b]">
+      <span
+        data-te-stepper-head-icon-ref
+        class="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-[#ebedef] text-sm font-medium text-[#40464f]">
+        <fa-icon [icon]="icons.faDollarSign"></fa-icon>
+      </span>
+      <span
+        data-te-stepper-head-text-ref
+        class="text-neutral-500 after:absolute after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
+        Budget
+      </span>
+    </div>
+    <div
+      data-te-stepper-content-ref
+      class="ps-1 transition-[height, margin-bottom, padding-top, padding-bottom] left-0 overflow-hidden pr-6 pb-6 pl-[3.75rem] duration-300 ease-in-out">
+      <div class="mb-1 max-w-md">
+        <p>
+          Mon budget est
+          {{
+            criteresUsager.budgetMax === budgetMaximum
+              ? 'illimité'
+              : 'de ' + criteresUsager.budgetMax.toString() + '$ CA'
+          }}.
+        </p>
+        <app-slider-price
+          [price]="criteresUsager.budgetMax.toString()"
+          [maxPrice]="budgetMaximum"
+          (priceChange)="onPriceChange($event)"></app-slider-price>
+        <button
+          class="bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="nextStep()">
+          Suivant
+        </button>
+      </div>
+    </div>
+  </li>
+  <li
+    data-te-stepper-step-ref
+    class="relative h-fit after:absolute after:left-[2.45rem] after:top-[3.6rem] after:mt-px after:h-[calc(100%-2.45rem)] after:w-px after:bg-[#e0e0e0] after:content-[''] dark:after:bg-neutral-600">
+    <div
+      data-te-stepper-head-ref
+      class="flex pointer-events-none items-center p-6 leading-[1.3rem] no-underline after:bg-[#e0e0e0] after:content-[''] hover:bg-[#f9f9f9] focus:outline-none dark:after:bg-neutral-600 dark:hover:bg-[#3b3b3b]">
+      <span
+        data-te-stepper-head-icon-ref
+        class="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-[#ebedef] text-sm font-medium text-[#40464f]">
+        <fa-icon [icon]="icons.faCar"></fa-icon>
+      </span>
+      <span
+        data-te-stepper-head-text-ref
+        class="text-neutral-500 after:absolute after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
+        Type de véhicule
+      </span>
+    </div>
+    <div
+      data-te-stepper-content-ref
+      class="ps-1 transition-[height, margin-bottom, padding-top, padding-bottom] left-0 overflow-hidden pr-6 pb-6 pl-[3.75rem] duration-300 ease-in-out">
+      <p>Quel type de véhicule désirez-vous?</p>
+      <app-selectable-items
+        [availableItems]="availableVehiculeTypes"
+        [selectedItems]="criteresUsager.typeVehicule"
+        (selectionChanged)="
+          onTypeVehiculeChange($event)
+        "></app-selectable-items>
+      <div class="mb-1 max-w-md flex flex-row justify-start gap-2">
+        <button
+          class="bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="previousStep()">
+          Précédent
+        </button>
+        <button
+          class="disabled:bg-green-700 disabled:hover:bg-green-700 disabled:border-green-900 disabled:hover:border-green-900 bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="nextStep()"
+          [disabled]="
+            criteresUsager.typeVehicule.length == 0 || nbMatchingVehicules == 0
+          ">
+          Suivant
+        </button>
+      </div>
+    </div>
+  </li>
+  <li
+    data-te-stepper-step-ref
+    class="relative h-fit after:absolute after:left-[2.45rem] after:top-[3.6rem] after:mt-px after:h-[calc(100%-2.45rem)] after:w-px after:bg-[#e0e0e0] after:content-[''] dark:after:bg-neutral-600">
+    <div
+      data-te-stepper-head-ref
+      class="flex pointer-events-none items-center p-6 leading-[1.3rem] no-underline after:bg-[#e0e0e0] after:content-[''] hover:bg-[#f9f9f9] focus:outline-none dark:after:bg-neutral-600 dark:hover:bg-[#3b3b3b]">
+      <span
+        data-te-stepper-head-icon-ref
+        class="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-[#ebedef] text-sm font-medium text-[#40464f]">
+        <fa-icon [icon]="icons.faHashtag"></fa-icon>
+      </span>
+      <span
+        data-te-stepper-head-text-ref
+        class="text-neutral-500 after:absolute after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
+        Nombre de sièges
+      </span>
+    </div>
+    <div
+      data-te-stepper-content-ref
+      class="ps-1 transition-[height, margin-bottom, padding-top, padding-bottom] left-0 overflow-hidden pr-6 pb-6 pl-[3.75rem] duration-300 ease-in-out">
+      <p>Combiens de sièges désirez-vous?</p>
+      <app-selectable-items
+        [availableItems]="availableNombreSieges"
+        [selectedItems]="getNombreSiegeValues()"
+        (selectionChanged)="
+          onNombreSiegesChange($event)
+        "></app-selectable-items>
+      <div class="mb-1 max-w-md flex flex-row justify-start gap-2">
+        <button
+          class="bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="previousStep()">
+          Précédent
+        </button>
+        <button
+          class="disabled:bg-green-700 disabled:hover:bg-green-700 disabled:border-green-900 disabled:hover:border-green-900 bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="nextStep()"
+          [disabled]="
+            criteresUsager.nombreSieges.length == 0 || nbMatchingVehicules == 0
+          ">
+          Suivant
+        </button>
+      </div>
+    </div>
+  </li>
+  <li data-te-stepper-step-ref class="relative h-fit">
+    <div
+      data-te-stepper-head-ref
+      class="flex pointer-events-none items-center p-6 leading-[1.3rem] no-underline after:bg-[#e0e0e0] after:content-[''] hover:bg-[#f9f9f9] focus:outline-none dark:after:bg-neutral-600 dark:hover:bg-[#3b3b3b]">
+      <span
+        data-te-stepper-head-icon-ref
+        class="mr-3 flex h-[1.938rem] w-[1.938rem] items-center justify-center rounded-full bg-[#ebedef] text-sm font-medium text-[#40464f]">
+        <fa-icon [icon]="icons.faBuilding"></fa-icon>
+      </span>
+      <span
+        data-te-stepper-head-text-ref
+        class="text-neutral-500 after:absolute after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
+        Lieux fréquemment visités
+      </span>
+    </div>
+    <div
+      data-te-stepper-content-ref
+      class="ps-1 transition-[height, margin-bottom, padding-top, padding-bottom] left-0 overflow-hidden pr-6 pb-6 pl-[3.75rem] duration-300 ease-in-out">
+      <app-questionnaire-trajets-simples></app-questionnaire-trajets-simples>
+      <div class="mb-1 max-w-md flex flex-row justify-start gap-2">
+        <button
+          class="bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="previousStep()">
+          Précédent
+        </button>
+        <button
+          class="disabled:bg-green-700 disabled:hover:bg-green-700 disabled:border-green-900 disabled:hover:border-green-900 bg-green-500 hover:bg-green-400 text-white py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+          (click)="completeStep()">
+          Continuer
+        </button>
+      </div>
+    </div>
+  </li>
+</ul>

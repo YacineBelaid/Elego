@@ -1,0 +1,83 @@
+<div class="w-full">
+  <div class="login-form-container">
+    <div class="grid grid-cols-1 gap-1">
+      <div class="">
+        <form
+          (ngSubmit)="onSubmitLogin()"
+          [formGroup]="loginForm"
+          class="login-form-data">
+          <div class="grid grid-rows-1 justify-center">
+            <div>
+              <fa-icon
+                class="login-icon flex justify-center"
+                [icon]="faUser"></fa-icon>
+            </div>
+            <div>
+              <label class="login-section-title"> Se connecter </label>
+            </div>
+          </div>
+
+          <div class="pb-md py-lg">
+            <div class="mb-4">
+              <input
+                class="login-form-input"
+                id="username"
+                type="text"
+                placeholder="nom d'utilisateur"
+                formControlName="username" />
+              <span
+                class="error-msg"
+                *ngIf="
+                  loginForm.get('username')?.hasError('required') &&
+                  loginForm.get('username')?.touched
+                "
+                >Entrez votre nom d'utilisateur.</span
+              >
+              <span
+                class="error-msg"
+                *ngIf="
+                  loginForm.get('username')?.hasError('pattern') &&
+                  loginForm.get('username')?.touched
+                "
+                >Uniquement les lettres et numéros sont acceptés.</span
+              >
+              <span
+                class="error-msg"
+                *ngIf="
+                  loginForm.get('username')?.hasError('maxlength') &&
+                  loginForm.get('username')?.touched
+                "
+                >Vous avez dépassé la taille maximale de 35 caractères.</span
+              >
+            </div>
+            <div class="mb-md">
+              <input
+                class="login-form-input"
+                id="password"
+                type="password"
+                placeholder="mot de passe"
+                formControlName="password" />
+              <span
+                class="error-msg"
+                *ngIf="
+                  loginForm.get('password')?.hasError('required') &&
+                  loginForm.get('password')?.touched
+                "
+                >Entrez votre mot de passe.</span
+              >
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center">
+            <button
+              class="btn btn-green"
+              type="submit"
+              [disabled]="!loginForm.valid">
+              connexion
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

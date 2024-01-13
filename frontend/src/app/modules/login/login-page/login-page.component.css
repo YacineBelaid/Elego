@@ -1,0 +1,48 @@
+.btn {
+  @apply font-bold py-sm px-md rounded;
+}
+.btn-green {
+  @apply bg-primary-dark text-white;
+}
+
+.btn:disabled {
+  @apply bg-primary-light;
+}
+.btn:disabled:hover {
+  @apply bg-primary-light;
+}
+.btn-green:hover {
+  background-color: #26883d;
+}
+
+.login-icon {
+  font-size: 10vh;
+  color: #dcdcdc;
+}
+
+.login-form-container {
+  margin-left: 30%;
+  margin-right: 30%;
+  margin-top: 5%;
+  padding: 5%;
+  @apply bg-white shadow-lg rounded;
+}
+.login-form-input {
+  background-color: rgba(78, 78, 78, 0.047);
+  @apply shadow-md rounded w-full p-md leading-tight mb-md;
+}
+
+.login-section-title {
+  font-weight: bolder;
+  font-size: large;
+  color: #838383;
+}
+
+.login-form-right {
+  padding-left: 10%;
+  padding-right: 30%;
+}
+
+.error-msg {
+  color: red;
+}

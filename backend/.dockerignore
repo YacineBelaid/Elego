@@ -1,0 +1,19 @@
+# Sert juste à optimiser le déploiement en réduisant la taille du contexte de build (et réduit les invalidations inutile de layer).
+# N'utilise pas la même syntaxe qu'un .gitignore.
+
+/Dockerfile
+/.dockerignore
+
+/dist
+/node_modules
+/.env.*
+
+/src/logs
+/test
+/nodemon.json
+/README.md
+/src/prisma/.env
+
+/.editorconfig
+/.prettierignore
+/.prettierrc.json

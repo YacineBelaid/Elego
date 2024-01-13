@@ -1,0 +1,86 @@
+<!--En tete de la page -->
+<div class="flex flex-wrap px-md">
+  <div class="w-full px-4">
+    <nav
+      class="relative flex flex-wrap items-center justify-between px-sm py-sm navbar-expand-lg">
+      <div
+        class="container mx-auto flex flex-wrap items-center justify-between">
+        <!--Section d'ajout de trajet (gauche)-->
+        <div
+          class="w-full relative flex justify-between md:w-auto px-4 md:static md:block md:justify-start">
+          <!--Button d'ajout de trajet-->
+          <app-ajout-trajet></app-ajout-trajet>
+          <!--Fin Button d'ajout de trajet-->
+
+          <!--Button d'affichage dropdown-->
+          <button
+            class="text-black cursor-pointer text-xl leading-none px-3 py-1 rounded bg-transparent block md:hidden outline-none focus:outline-none"
+            type="button"
+            (click)="toggleNavbar()">
+            <fa-icon class="pl-sm" [icon]="faAngleDown"></fa-icon>
+          </button>
+          <!--Fin Button d'affichage dropdown-->
+        </div>
+        <!--Fin Section d'ajout de trajet (gauche)-->
+
+        <!--Section des modes d'affichage de trajet (droite)-->
+        <div
+          [ngClass]="{ hidden: !menuShow, flex: menuShow }"
+          class="md:flex md:flex-grow items-center">
+          <ul
+            class="py-sm px-sm flex flex-row list-none md:ml-auto bg-gray text-zinc-800 rounded">
+            <li class="nav-item mr-sm">
+              <button
+                class="py-sm px-md md:px-lg hover:bg-primary-light rounded"
+                (click)="toggleTabs(1)"
+                [ngClass]="{ ' bg-primary-dark': openTab === 1 }">
+                <fa-icon class="inline pr-sm" [icon]="faRoute"></fa-icon>
+                <span>Trajets</span>
+              </button>
+            </li>
+            <li class="nav-item mr-sm">
+              <button
+                class="py-sm px-md md:px-lg hover:bg-primary-light rounded"
+                (click)="toggleTabs(2)"
+                [ngClass]="{ ' bg-primary-dark': openTab === 2 }">
+                <fa-icon class="inline pr-sm" [icon]="faCalendar"></fa-icon>
+                <span>Agenda</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="py-sm px-md md:px-lg hover:bg-primary-light rounded"
+                (click)="toggleTabs(3)"
+                [ngClass]="{ ' bg-primary-dark': openTab === 3 }">
+                <fa-icon
+                  class="inline pr-sm"
+                  [icon]="faLocationArrow"></fa-icon>
+                <span>Lieux</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <!--Fin Dropdown menu-->
+      </div>
+    </nav>
+  </div>
+</div>
+<!--Fin En tete de la page -->
+
+<div class="flex flex-wrap">
+  <div class="w-full">
+    <div class="relative flex flex-col min-w-0 break-words w-full">
+      <div class="flex-row">
+        <div class="tab-content tab-space">
+          <div *ngIf="openTab === 1" class="block">
+            <app-trajets></app-trajets>
+          </div>
+
+          <div *ngIf="openTab === 2" class="block"></div>
+
+          <div *ngIf="openTab === 3" class="block"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

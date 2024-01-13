@@ -1,0 +1,20 @@
+<form #formulaire="ngForm">
+  <div>
+    <label for="adresse">Adresse :</label>
+    <input type="text" name="adresse" ngModel required />
+  </div>
+  <div>
+    <label for="etiquette">Etiquette (Optionelle) :</label>
+    <input type="text" name="etiquette" ngModel />
+  </div>
+  <div>
+    <label for="isResidence">Est-ce une résidence</label>
+    <input type="checkbox" name="isResidence" ngModel />
+  </div>
+  <div>
+    <button #submitButton type="button" (click)="onSubmit(formulaire)">
+      Confirmer
+    </button>
+    <button #cancelButton type="button" (click)="onCancel()">Annuler</button>
+  </div>
+</form>

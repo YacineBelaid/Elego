@@ -1,0 +1,43 @@
+/* Section header */
+
+header {
+  @apply px-sm md:px-lg py-md font-bold flex flex-wrap;
+}
+
+.button-ajout-trajets {
+  @apply float-left content-center my-sm py-md px-xl md:px-lg bg-primary-dark hover:bg-primary text-white rounded shadow-md;
+}
+
+.container-modes-trajets {
+  @apply px-sm py-sm gap-sm flex md:inline-flex bg-gray rounded shadow-md justify-between;
+}
+
+.button-mode-trajet {
+  @apply py-md px-xl md:px-lg md:w-fit h-full bg-primary-dark hover:bg-primary text-white rounded;
+}
+
+/* Section main */
+
+main {
+  @apply max-w-xl md:max-w-2xl lg:max-w-6xl mx-auto px-md md:px-xl grid grid-cols-1 gap-md md:grid-cols-2 lg:grid-cols-2;
+}
+
+.main-card {
+  @apply flex flex-col p-lg bg-gray shadow-md hover:shadow-lg;
+}
+
+.main-card-title {
+  @apply pb-md text-lg font-bold;
+}
+
+.main-card-description {
+  @apply mb-xl flex-1;
+}
+
+.main-card-link {
+  @apply py-sm px-md bg-primary-dark hover:bg-primary text-white flex self-end rounded;
+}
+
+.main-card-link {
+  @apply py-sm px-md bg-primary-dark hover:bg-primary text-white flex self-end rounded;
+}

@@ -1,0 +1,52 @@
+.admin-dashboard-container {
+  padding: 2.5%;
+  margin-top: 2.5%;
+  margin-left: 10%;
+  margin-right: 10%;
+  /*
+   background-color: rgb(246, 246, 246);
+   @apply shadow-lg rounded;
+   */
+}
+
+.option-icon {
+  font-size: 10vh;
+  padding-left: 30%;
+}
+
+.admin-dashboard-option {
+  padding: 2.5%;
+  margin-right: 15%;
+  padding-left: 5%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+
+  @apply bg-white  drop-shadow-xl rounded text-start;
+}
+
+.admin-dashboard-option:hover {
+  background-color: black;
+  cursor: pointer;
+  color: aliceblue;
+}
+.admin-dashboard-option:hover {
+  background-color: black;
+  cursor: pointer;
+  color: aliceblue;
+}
+
+.dashboard-title {
+  font-weight: bolder;
+  font-size: x-large;
+  margin-bottom: 3%;
+}
+
+.option-title {
+  font-weight: bolder;
+  font-size: larger;
+  margin-bottom: 2%;
+}
+
+.option-description {
+  padding-right: 20%;
+}

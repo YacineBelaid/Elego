@@ -1,0 +1,37 @@
+<div class="admin-dashboard-container">
+  <div class="dashboard-title">
+    Dashboard Administrateur <fa-icon class="pr-sm" [icon]="faWrench"></fa-icon>
+  </div>
+  <div>
+    <div class="grid grid-cols-3 gap-lg content-center">
+      <div
+        class="admin-dashboard-option"
+        type="button"
+        [routerLink]="['/admin/ajoutVehiculeForm']">
+        <div class="option-title">Véhicules</div>
+        <div>
+          <p class="option-description">
+            Gestion de véhicules: ajouter, modifier et supprimer.
+          </p>
+        </div>
+        <fa-icon class="option-icon" [icon]="faCar"></fa-icon>
+      </div>
+      <div class="admin-dashboard-option" [routerLink]="['/']">
+        <div class="option-title">Utilisateurs</div>
+        <div>
+          <p class="option-description">Gestion des utilisateurs</p>
+        </div>
+        <fa-icon class="option-icon" [icon]="faUserCog"></fa-icon>
+      </div>
+      <div class="admin-dashboard-option" [routerLink]="['/']">
+        <div class="option-title">Commentaires</div>
+        <div>
+          <p class="option-description">
+            Consulter les commentaires ou questions des utilisateurs.
+          </p>
+        </div>
+        <fa-icon class="option-icon" [icon]="faComments"></fa-icon>
+      </div>
+    </div>
+  </div>
+</div>

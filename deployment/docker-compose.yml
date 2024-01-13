@@ -1,0 +1,90 @@
+---
+version: '3'
+
+# Notes rapides:
+# * Un service peut communiquer avec les autres en mettant le nom du service cible comme nom d'hôte.
+# * 'restart: always' fonctionne au démarrage du daemon Docker, donc au boot mais aussi lors des crash (attention aux crash loop).
+# * Les variables de la forme "${VAR}" sont définies dans un fichier '.env' à côté de ce fichier.
+#   Celles-ci ne sont pas passées aux containers à moins de les ajouter explicitement à 'environment:' du container.
+
+# Le boilerplate minimal d'un service devrait être:
+#   restart: always
+#   logging: *common-logging
+# (Soit que tous les services doivent au moins avoir cette configuration.)
+# Le premier pour qu'il redémarre tout le temps, incluant au démarrage de la machine et lors des crash.
+# Le deuxième évite de remplir le disque avec les logs des containers en mettant une limite commune sur la taille et le nombre des fichiers de log.
+
+# Il y a 2 trucs ici, le 'x-' déclare une extension qui est ignoré par Docker Compose, ce qui permet de placer des fragments de YAML communs par exemple.
+# L'autre truc est les ancres YAML, soit le '&' qui permet de le référencer plus tard avec le '*'.
+# Donc, cela permet de centraliser la configuration pour le logging.
+# En fait, cette section est adaptée de https://docs.docker.com/compose/compose-file/#using-extensions-as-fragments et l'exemple donné est pour les logs.
+x-logging: &common-logging
+  driver: json-file
+  options:
+    max-size: "30m"
+    max-file: "5"
+
+services:
+  reverse_proxy:
+    image: "${IMAGE_REPO}/reverse_proxy:${VERSION}"
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      NGINX_SERVER_NAME: "adve.info.uqam.ca"
+      # Valeur bidon comme que la validation est encore présente mais pas actuellement utilisé à cause du hack dans le Dockerfile.
+      CERTBOT_EMAIL: "a@example.com"
+      # Le rate limit de l'environnement de staging est plus haut, ce qui permet de tester mais ne donne pas de certificats signés par une autorité de confiance dans les navigateurs (c'est une bidon clairement marquée pour les tests).
+      STAGING: "0"
+      # Le support des certificats ECDSA n'est pas 100%, donc on demande plutôt un certificat RSA.
+      USE_ECDSA: "0"
+    volumes:
+      - "letsencrypt_certs:/etc/letsencrypt"
+    restart: always
+    logging: *common-logging
+  frontend:
+    image: "${IMAGE_REPO}/frontend:${VERSION}"
+    restart: always
+    logging: *common-logging
+  backend:
+    image: "${IMAGE_REPO}/backend:${VERSION}"
+    environment:
+      # 'true' pour trust les headers 'X-Forwarded-*' set par le reverse proxy plus haut (voir aussi 'nginx/ssve.conf').
+      # Un des effets est de mettre la valeur de 'X-Forwarded-For' dans 'req.ip'.
+      DATABASE_URL: "mysql://root:root@database:3306/SSVE" #"mysql://root:root@localhost:3306/elego"
+      EXPRESS_TRUST_PROXY: 'true'
+      SECRET: 'SSVEuqam'
+      PORT: 4500
+      LOG_FORMAT: combined
+      STORE_SESSIONS_IN_MYSQL: 'true'
+      # 'true' pour ajouter l'attribut 'Secure' au cookie de session pour qu'il soit juste transmis sur des connexions sécurisées comme que HTTPS est actif en production.
+      SECURE_SESSION_COOKIE: 'true'
+      # Informations de connexion à la base de données.
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: SSVE
+      # Les CORS ne sont pas nécessaire comme qu'il y a juste une seule origine.
+    depends_on:
+      - database
+    restart: always
+    logging: *common-logging
+  database:
+    # Cette version est la dernière version supportée par le package npm pour le client MySQL
+    # sans devoir ajuster manuellement la BD, voir https://github.com/mysqljs/mysql/pull/1962.
+    image: mysql:8.0.3
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: SSVE
+    volumes:
+      - "database_data:/var/lib/mysql"
+    restart: always
+    logging: *common-logging
+
+# C'est plus facile de retrouver quel volume contient les données en donnant un nom à celui-ci.
+# (Et ne pas laisser le container créer un volume anonyme.)
+volumes:
+  database_data:
+  letsencrypt_certs:
+

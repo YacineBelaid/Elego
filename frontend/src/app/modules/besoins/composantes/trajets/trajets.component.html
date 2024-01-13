@@ -1,0 +1,74 @@
+<div class="md:container md:mx-auto">
+  <!-- Section: contenue -->
+  <div class="flex flex-wrap">
+    <div class="w-full h-[60vh] md:w-5/12 md:pr-sm">
+      <app-map class="w-screen"></app-map>
+    </div>
+
+    <div class="overflow-y-scroll w-full h-[60vh] md:w-7/12 md:pl-sm">
+      <div class="p-sm" *ngFor="let itineraire of itineraires">
+        <div class="bg-white rounded shadow-[0px_4px_15px_0px_#00000020] hover:shadow-[0px_10px_20px_20px_#00000010]">
+          <h2 class="mb-0 rounded" id="headingTwo">
+            <button
+              class="group relative flex w-full items-center rounded border-0 bg-white py-4 px-5 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-white [&:not([data-te-collapse-collapsed])]:text-primary [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+              type="button" data-te-collapse-init data-te-collapse-collapsed [attr.data-te-target]="'#' + itineraire.id"
+              aria-expanded="false">
+              {{ itineraire.nom }}
+              <span
+                class="ml-auto -mr-1 h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="h-6 w-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </span>
+            </button>
+          </h2>
+          <div id="{{ itineraire.id }}" class="!visible hidden" data-te-collapse-item
+            data-te-parent="#accordionExample">
+            <div class="py-4 px-5">
+              <div *ngFor="
+                  let trajet of itineraire.trajets;
+                  let first = first;
+                  let last = last
+                " class="bg-gray-100 p-sm">
+                <div class="flex items-start bg-white p-sm">
+                  <!-- Icone d'un lieu -->
+                  <div class="flex w-xl items-center text-center">
+                    <ng-template [ngIf]="first" [ngIfElse]="elseIf">
+                      <fa-icon class="mx-auto w-full h-full text-xl text-sky-900" [icon]="faCircle"></fa-icon>
+                    </ng-template>
+
+                    <ng-template #elseIf>
+                      <ng-template [ngIf]="last" [ngIfElse]="between">
+                        <fa-icon *ngIf="last" class="w-full h-full text-3xl text-red-500"
+                          [icon]="faMapMarkerAlt"></fa-icon>
+                      </ng-template>
+                    </ng-template>
+
+                    <ng-template #between>
+                      <ng-template [ngIf]="true">
+                        <fa-icon class="w-full h-full text-3xl text-sky-900" [icon]="faMapPin"></fa-icon>
+                      </ng-template>
+                    </ng-template>
+                  </div>
+
+                  <!-- Description d'un lieu -->
+                  <div class="ml-md gap-md">
+                    <h2 class="font-semibold text-black">
+                      {{ trajet.origine.etiquette }}
+                    </h2>
+                    <p class="mt-2 text-sm text-black">
+                      <span *ngIf="trajet.origine.adresse != null">{{ trajet.origine.adresse.adresse }}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Section: Design Block -->
+</div>
+<!-- Container for demo purpose -->

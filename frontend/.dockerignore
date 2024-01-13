@@ -1,0 +1,18 @@
+# Sert juste à optimiser le déploiement en réduisant la taille du contexte de build (et réduit les invalidations inutile de layer).
+# N'utilise pas la même syntaxe qu'un .gitignore.
+
+/Dockerfile
+/.dockerignore
+
+/.angular
+/node_modules
+/dist
+
+/tsconfig.spec.json
+/karma.conf.js
+/karma-headless.conf.js
+/README.md
+
+/.editorconfig
+/.prettierignore
+/.prettierrc.json

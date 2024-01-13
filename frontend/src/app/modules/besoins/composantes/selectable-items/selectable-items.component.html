@@ -1,0 +1,30 @@
+<div class="flex flex-row gap-4 my-4">
+  <div *ngFor="let typeVehicule of availableItems">
+    <div
+      class="flex justify-center cursor-default select-none"
+      [attr.data-value]="typeVehicule"
+      [attr.data-selected]="selectedItems.includes(typeVehicule)"
+      (click)="cardClicked($event)">
+      <div
+        class="block max-w-sm rounded-lg {{
+          selectedItems.includes(typeVehicule)
+            ? 'bg-green-100'
+            : 'bg-neutral-50'
+        }}
+       shadow-lg dark:bg-neutral-700">
+        <div class="p-2">
+          <h5
+            class="text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+            {{ typeVehicule }}
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    class="bg-red-500 hover:bg-red-400 text-white py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded"
+    *ngIf="selectedItems && selectedItems.length > 0"
+    (click)="clearSelection()">
+    Effacer les filtres
+  </button>
+</div>

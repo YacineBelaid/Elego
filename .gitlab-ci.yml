@@ -1,0 +1,144 @@
+image: node:18-bullseye-slim
+
+
+frontend-build:
+  stage: build
+  script:
+    - cd frontend
+    - npm ci
+    # Juste faire rouler le compilateur TypeScript, on n'a pas besoin du bundle pour le browser ici.
+    - npm run ngc
+
+
+backend-build:
+  stage: build
+  script:
+    - cd backend
+    - npm ci
+    - npm run "prisma:generate"
+    - npm run build
+
+frontend-tests:
+  stage: test
+  script:
+    - echo "Running frontend-tests"
+    # On va plutôt utiliser un Chrome normal dans les repos de Debian en mode headless plutôt
+    # que d'installer un serveur X11 virtuel en même temps comme que c'est moins compliqué
+    # et ça prend moins de temps à installer.
+    - apt-get update && apt-get install --no-install-recommends -y chromium
+    - cd frontend
+    - npm ci
+    - CHROME_BIN=/usr/bin/chromium npm run test-headless
+
+backend-tests:
+  stage: test
+  services:
+    - name: mysql:8.0.3
+      alias: database
+        
+  variables:
+    DATABASE_URL: 'mysql://root:root@database:3306/SSVE'
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: SSVE
+  script:
+    - echo "Running backend-tests"
+    - cd backend
+    - npm ci
+    - npm run "prisma:generate"
+    - npx prisma migrate dev
+    - npm run test
+  
+
+.deploy_common:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"'
+  before_script:
+    - VERSION="${CI_PIPELINE_ID}_${CI_COMMIT_SHORT_SHA}"
+
+.package_release:
+  stage: deploy
+  image:
+    # On utilise kaniko pour build les images Docker au lieu de Docker comme que c'est plus facile à utiliser dans un
+    # contexte avec moins de privilèges comme dans une pipeline où il peut être difficile d'utiliser Docker-in-Docker.
+    name: gcr.io/kaniko-project/executor:v1.9.1-debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"},\"$CI_DEPENDENCY_PROXY_SERVER\":{\"auth\":\"$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')\"}}}" >/kaniko/.docker/config.json
+    - >-
+      /kaniko/executor --context "${CI_PROJECT_DIR}/${CONTEXT_DIR}" --dockerfile "${CI_PROJECT_DIR}/${CONTEXT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${VERSION}"
+      --destination "${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest"
+
+package_frontend:
+  extends:
+    - .deploy_common
+    - .package_release
+  variables:
+    CONTEXT_DIR: frontend
+    IMAGE_NAME: frontend
+
+package_backend:
+  extends:
+    - .deploy_common
+    - .package_release
+  variables:
+    CONTEXT_DIR: backend
+    IMAGE_NAME: backend
+
+package_reverse_proxy:
+  extends:
+    - .deploy_common
+    - .package_release
+  variables:
+    CONTEXT_DIR: deployment/nginx
+    IMAGE_NAME: reverse_proxy
+
+deploy:
+  extends:
+    - .deploy_common
+  # Utiliser la même image de base que pour Node pour augmenter les chances d'avoir déjà celle-ci sur le runner GitLab.
+  image: debian:bullseye-slim
+  stage: deploy
+  needs:
+    - package_frontend
+    - package_backend
+    - package_reverse_proxy
+  script:
+    # Validations de variable.
+    - |
+      if [ -z "${DEPLOY_TARGET_HOST+x}" ] ; then
+        echo "La variable DEPLOY_TARGET_HOST doit être définie avant d'exécuter la pipeline (devrait être normalement définie dans sidebar - Settings - CI/CD - Variables)."
+        exit 1
+      fi
+    - |
+      if [ -z "${DEPLOY_TARGET_SSH_KEY+x}" ] ; then
+        echo "La variable DEPLOY_TARGET_SSH_KEY doit être définie avant d'exécuter la pipeline (devrait être normalement définie dans sidebar - Settings - CI/CD - Variables)."
+        exit 1
+      fi
+    # Le host pour développer le déploiement n'écoute pas sur le port 22.
+    - DEPLOY_TARGET_PORT="${DEPLOY_TARGET_PORT:-22}"
+    # Installer le client SSH et les outils reliés, ce qui contient 'scp' et 'ssh-agent' comme que ce n'est pas dans l'image slim de Debian.
+    - apt-get update && apt-get install --no-install-recommends -y openssh-client
+    # Setup l'agent SSH.
+    - eval $(ssh-agent)
+    # Les clés Ed25519 (le type utilisé par le host de développement du déploiement) doivent juste avoir des retour de chariot
+    # '\n', ce qui n'est pas le cas quand la variable est définie dans les paramètres du projet, donc les retirer.
+    - echo "${DEPLOY_TARGET_SSH_KEY}" | tr -d '\r' | ssh-add -
+    # Ça me tente pas de deviner comment trust le serveur distant, donc on va juste faire une première connexion avec
+    # une commande sans side-effects sans valider l'identité du serveur mais cette connexion va avoir le side-effect
+    # de trust le serveur.
+    - ssh -o StrictHostKeyChecking=no -p "${DEPLOY_TARGET_PORT}" "${DEPLOY_TARGET_HOST}" 'echo "Connexion OK"'
+    # Créer le dossier qui va contenir le projet Docker Compose.
+    - ssh -p "${DEPLOY_TARGET_PORT}" "${DEPLOY_TARGET_HOST}" 'mkdir -p "${HOME}/ssve-prod"'
+    # Mettre à jour la définition du projet.
+    - |
+      ssh -p "${DEPLOY_TARGET_PORT}" "${DEPLOY_TARGET_HOST}" 'cat >"${HOME}/ssve-prod/.env"' <<EOF
+      IMAGE_REPO=${CI_REGISTRY_IMAGE}
+      VERSION=${VERSION}
+
+      EOF
+    - scp -P "${DEPLOY_TARGET_PORT}" 'deployment/docker-compose.yml' "${DEPLOY_TARGET_HOST}:ssve-prod"
+    # Déployer les changements.
+    # '--detach' laisse les containers rouler en arrière-plan, '--remove-orphans' enlève ceux qui ne sont plus dans le 'docker-compose.yml' (en se basant sur le préfixe des containers).
+    - ssh -p "${DEPLOY_TARGET_PORT}" "${DEPLOY_TARGET_HOST}" 'cd "${HOME}/ssve-prod" && docker compose up --detach --remove-orphans'
+
