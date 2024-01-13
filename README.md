@@ -2,7 +2,6 @@
 
 Système de suggestions de véhicules électriques
 
-_Le reste est sous votre responsabilité..._
 
 La pile technologique actuelle de l'application web. 
 
